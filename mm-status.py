@@ -14,9 +14,9 @@ from textwrap import dedent
 from typing import Any, Callable, Dict, List, TypedDict, Optional, Union, cast
 from urllib.parse import urljoin, urlsplit
 
-# apt install python3-appdirs python3-iso8601 python3-requests
-# or pip install appdirs iso8601 requests
-import appdirs   # license: MIT
+# apt install python3-platformdirs python3-iso8601 python3-requests
+# or pip install platformdirs iso8601 requests
+import platformdirs  # license: MIT
 import iso8601   # license: MIT
 import requests  # license: Apache 2.0
 
@@ -46,7 +46,7 @@ class Cache(TypedDict):
 
 class CacheFile:
     def __init__(self, server: HostName, login_id: LoginId) -> None:
-        self._path = Path(appdirs.user_cache_dir('mm-status')) / server / login_id
+        self._path = Path(platformdirs.user_cache_dir('mm-status')) / server / login_id
 
     def read(self) -> Optional[Cache]:
         return json.loads(self._path.read_text()) if self._path.is_file() else None
@@ -217,14 +217,14 @@ def duration_arguments(f: Callable) -> Callable:
 
 
 def default_server() -> Url:
-    servers = list(Path(appdirs.user_cache_dir('mm-status')).iterdir())
+    servers = list(Path(platformdirs.user_cache_dir('mm-status')).iterdir())
     if len(servers) == 1:
         return servers[0].name
     raise ValueError('Caches for more than one server found, please specify')
 
 
 def default_user(server: Url) -> LoginId:
-    logins = list((Path(appdirs.user_cache_dir('mm-status')) / server).iterdir())
+    logins = list((Path(platformdirs.user_cache_dir('mm-status')) / server).iterdir())
     if len(logins) == 1:
         return logins[0].name
     raise ValueError('Caches for more than one user found, please specify')
